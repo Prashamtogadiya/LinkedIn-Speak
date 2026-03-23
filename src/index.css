@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 206 80% 97%;
+  --foreground: 210 35% 17%;
+  --card: 0 0% 100%;
+  --card-foreground: 210 35% 17%;
+  --primary: 212 79% 43%;
+  --primary-foreground: 210 40% 98%;
+  --muted: 205 45% 94%;
+  --muted-foreground: 213 18% 42%;
+  --accent: 37 96% 62%;
+  --accent-foreground: 210 35% 17%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 205 34% 85%;
+  --input: 205 34% 85%;
+  --ring: 212 79% 43%;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, rgba(245, 250, 255, 0.98), rgba(225, 241, 255, 0.92)),
+    linear-gradient(180deg, #ffffff 0%, #e9f3fb 100%);
+  color: hsl(var(--foreground));
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.2);
+}
