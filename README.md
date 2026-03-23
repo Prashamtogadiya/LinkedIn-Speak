@@ -30,4 +30,9 @@ Frontend runs on `http://localhost:5173` and the API runs on `http://localhost:3
 GROQ_API_KEY=your_groq_api_key_here
 GROQ_MODEL=llama-3.3-70b-versatile
 PORT=3001
+CORS_ORIGINS=http://localhost:5173,http://localhost:4173
+VITE_API_BASE_URL=http://localhost:3001
 ```
+
+- `CORS_ORIGINS`: comma-separated list of allowed frontend origins for the backend API.
+- `VITE_API_BASE_URL`: base URL used by the frontend when calling the backend API.

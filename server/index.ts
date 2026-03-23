@@ -1,20 +1,41 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import type { CorsOptions } from "cors";
 
 const app = express();
 const port = Number(process.env.PORT || 3001);
 const groqApiKey = process.env.GROQ_API_KEY;
 const groqModel = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
-app.use(cors());
+const allowedOrigins = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const corsOptions: CorsOptions = {
+  origin: (origin, callback) => {
+    // Allow server-to-server and same-origin calls without an Origin header.
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  }
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
 });
 
-app.post("/api/translate", async (req, res) => {
+async function handleTranslate(req: express.Request, res: express.Response) {
   const input = typeof req.body?.input === "string" ? req.body.input.trim() : "";
 
   if (!input) {
@@ -79,7 +100,7 @@ app.post("/api/translate", async (req, res) => {
       return res.status(502).json({ error: "The model did not return a caption." });
     }
 
-    return res.json({ output });
+    return res.json({success:true,data:output });
   } catch (error) {
     return res.status(500).json({
       error:
@@ -88,7 +109,10 @@ app.post("/api/translate", async (req, res) => {
           : "Something went wrong while generating the LinkedIn caption."
     });
   }
-});
+}
+
+app.post("/translate", handleTranslate);
+app.post("/api/translate", handleTranslate);
 
 app.listen(port, () => {
   console.log(`LinkedIn Speak API running on http://localhost:${port}`);

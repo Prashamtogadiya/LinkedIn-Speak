@@ -10,6 +10,11 @@ import CopyIcon from "./components/icons/copy-icon";
 const sampleInput =
   "I completed my first hackathon project with my friends and we built an AI study tool in 24 hours. I learned a lot and we won second place.";
 
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL).replace(
+  /\/$/,
+  ""
+);
+
 function App() {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -36,7 +41,7 @@ function App() {
     setError("");
 
     try {
-      const response = await fetch("/api/translate", {
+      const response = await fetch(`${apiBaseUrl}/api/translate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -44,13 +49,13 @@ function App() {
         body: JSON.stringify({ input })
       });
 
-      const data = (await response.json()) as { output?: string; error?: string };
+      const data = (await response.json()) as { success?: boolean; data?: string; error?: string };
 
-      if (!response.ok) {
+      if (!response.ok || !data.success) {
         throw new Error(data.error || "Unable to generate a LinkedIn caption right now.");
       }
 
-      setOutput(data.output || "");
+      setOutput(data.data as string);
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -94,7 +99,7 @@ function App() {
         <section className="mb-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/75 px-4 py-2 text-sm font-semibold text-muted-foreground shadow-sm backdrop-blur">
-              <LinkedinIcon className="h-8 w-8 text-primary" />
+              <LinkedinIcon className="h-8 w-8 text-primary text-[#0077B5]" />
               Plain thoughts in, LinkedIn polish out
             </div>
             <h1 className="max-w-3xl text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
@@ -121,7 +126,7 @@ function App() {
           <div className="flex flex-col border-b border-border/70 bg-white/50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="rounded-full p-2 text-primary" >
-                <SparklesIcon className="h-7 w-7"/>
+                <SparklesIcon className="h-7 w-7 text-blue-400"/>
               </div>
               <div>
                 <p className="text-base font-bold">Translator</p>
@@ -139,7 +144,7 @@ function App() {
                 Clear
               </Button>
               <Button variant="secondary" size="icon" onClick={swapPanels} aria-label="Swap panels">
-                <ArrowRightLeft className="h-4 w-4" />
+                <ArrowRightLeft className="h-4 w-4 text-blue-400" />
               </Button>
             </div>
           </div>
@@ -167,7 +172,7 @@ function App() {
 
             <div className="hidden items-center justify-center border-r border-border/70 bg-slate-50/60 px-3 lg:flex">
               <div className="rounded-full border border-white/80 bg-white p-3 shadow-sm">
-                <ArrowRightLeft className="h-5 w-5 text-primary" />
+                <ArrowRightLeft className="h-5 w-5 text-primary text-blue-400" />
               </div>
             </div>
 
@@ -209,7 +214,7 @@ function App() {
               )}
             </div>
 
-            <Button onClick={generateCaption} disabled={!canGenerate}>
+            <Button onClick={generateCaption} disabled={!canGenerate} className="bg-blue-300 cursor-pointer" >
               {isLoading ? <LoaderCircle className="mr-2 h-4 w-4 animate-spin" /> : null}
               {isLoading ? "Generating..." : "Translate to LinkedIn Speak"}
             </Button>

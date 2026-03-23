@@ -12,7 +12,7 @@ const LinkedinIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(
     const start = useCallback(async () => {
       animate(
         ".border",
-        { scale: [1, 1.05, 1] },
+        { scale: [1, 1.25, 1] },
         { duration: 0.4, ease: "easeInOut" },
       );
       await animate(
